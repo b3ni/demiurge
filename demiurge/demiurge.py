@@ -4,7 +4,6 @@ import sys
 
 import pyquery
 
-
 PY3 = sys.version_info[0] == 3
 
 if PY3:
@@ -20,7 +19,7 @@ def is_absolute(url):
 
 def with_metaclass(meta, base=object):
     """Create a base class with a metaclass."""
-    return meta("NewBase", (base,), {})
+    return meta("NewBase", (base, ), {})
 
 
 class BaseField(object):
@@ -42,8 +41,7 @@ class BaseField(object):
 
     def get_value(self, pq):
         """Extract value from given PyQuery element."""
-        raise NotImplementedError(
-            "Custom fields have to implement this method")
+        raise NotImplementedError("Custom fields have to implement this method")
 
 
 class TextField(BaseField):
@@ -86,8 +84,7 @@ class AttributeValueField(TextField):
     """
 
     def __init__(self, selector=None, attr=None, coerce=None):
-        super(AttributeValueField, self).__init__(
-            selector=selector, coerce=coerce)
+        super(AttributeValueField, self).__init__(selector=selector, coerce=coerce)
         self.attr = attr
 
     def get_value(self, pq):
@@ -158,9 +155,22 @@ class RelatedItem(object):
         raise AttributeError('RelatedItem cannot be set.')
 
 
+class HtmlField(demiurge.TextField):
+    def get_value(self, pq):
+        value = None
+
+        tag = pq
+        if self.selector is not None:
+            tag = pq(self.selector).eq(0)
+
+        if tag:
+            value = str(tag)
+        return value
+
+
 def get_fields(bases, attrs):
-    fields = [(field_name, attrs.pop(field_name)) for field_name, obj in
-              list(attrs.items()) if isinstance(obj, BaseField)]
+    fields = [(field_name, attrs.pop(field_name)) for field_name, obj in list(attrs.items())
+              if isinstance(obj, BaseField)]
     # add inherited fields
     for base in bases[::-1]:
         if hasattr(base, '_fields'):
