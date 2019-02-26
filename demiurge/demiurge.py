@@ -155,7 +155,7 @@ class RelatedItem(object):
         raise AttributeError('RelatedItem cannot be set.')
 
 
-class HtmlField(demiurge.TextField):
+class HtmlField(TextField):
     def get_value(self, pq):
         value = None
 
