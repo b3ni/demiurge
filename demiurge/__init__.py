@@ -10,4 +10,5 @@ from .demiurge import (
     ItemDoesNotExist,
     RelatedItem,
     TextField,
+    HtmlField,
 )
